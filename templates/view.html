@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+	<body>
+	<center>
+	<h1>The customer is renting the car for '{{var}}'  purpose</h1><br>
+	<h1> The top 10 suggested cars are as below:</h1><br>	 
+ 		{% for table in tables %}
+    	{{ table|safe }}
+  		{% endfor %} 	
+  		<br>
+  		<br>
+  		<form action = "/homer" method ="POST">
+  			<input type="submit" value="New Search">
+  	</form>
+  	</center>
+  	</body>
+ </html>
