@@ -46,7 +46,7 @@ def fetch():
 
 def datetime_to_weekday(df,dummy_dayElem):
 	#converts datetime stamps to weekday
-	for i in range(len(dummy_dayElem)):
+	for i in enumerate(dummy_dayElem):
 		df[df.columns[dummy_dayElem[i]]]= pd.to_datetime(df[df.columns[dummy_dayElem[i]]]).dt.weekday_name
 	return df
 
