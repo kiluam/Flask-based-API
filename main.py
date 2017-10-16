@@ -26,44 +26,44 @@ def fetch():
 		return redirect(url_for('index')) #directs back to homepage
 	
 	
-	dummy_dayElem=[1,6] #index for cols 'f3' and 'f23' containing datetime
-	df=datetime_to_weekday(df,dummy_dayElem) # converts datetime to weekday
+	dummy_dayelem = [1,6] #index for cols 'f3' and 'f23' containing datetime
+	df = datetime_to_weekday(df,dummy_dayelem) # converts datetime to weekday
 	
 
-	df['f27']=df.f11.rmul(df.f12) #highest product of no_bags and no_pass, indicate largest car. If otherwise, please specify definitions of big vs small cars. 
-	df=df.sort_values(by='f27', ascending=False) #sorts cars according to sizes
+	df['f27'] = df.f11.rmul(df.f12) #highest product of no_bags and no_pass, indicate largest car. If otherwise, please specify definitions of big vs small cars. 
+	df = df.sort_values(by='f27', ascending=False) #sorts cars according to sizes
 
-	hrs=hrs_category(df) #categorize duations
-	var= booking_category(df.iloc[0,1],df.iloc[0,6],hrs) #purpose of booking business family or other
+	hrs = hrs_category(df) #categorize duations
+	var = booking_category(df.iloc[0,1],df.iloc[0,6],hrs) #purpose of booking business family or other
 
 	df.drop(['f1','f3','f23','f26','f27'], axis=1, inplace=True) #drop unnecessary columns
 
 	df.columns=['price','#_bags','#_passengers','duration'] #rename columns for display
-	df=display_table(df,var) #specific rows to be displayed, example for business purpose medium cars.
+	df = display_table(df, var) #specific rows to be displayed, example for business purpose medium cars.
 	
-	return render_template('view.html',var = var,tables=[df.to_html(classes='customer',index=False)])
+	return render_template('view.html', var = var,tables=[df.to_html(classes='customer',index=False)])
 
 
-def datetime_to_weekday(df,dummy_dayElem):
+def datetime_to_weekday(df,dummy_dayelem):
 	#converts datetime stamps to weekday
-	for i, _ in enumerate(dummy_dayElem):
-		df[df.columns[dummy_dayElem[i]]]= pd.to_datetime(df[df.columns[dummy_dayElem[i]]]).dt.weekday_name
+	for i in enumerate(dummy_dayelem):
+		df[df.columns[dummy_dayelem[i]]]= pd.to_datetime(df[df.columns[dummy_dayelem[i]]]).dt.weekday_name
 	return df
 
 def hrs_category(df):
 	#categorize durations for switch cases
-	if (df.iloc[0,5]<=7):
-		hrs=1
-	elif (df.iloc[0,5]<=15):
-		hrs=2
+	if  df.iloc[0,5] <= 7 :
+		hrs = 1
+	elif  df.iloc[0,5] <= 15 :
+		hrs = 2
 	else:
-		hrs=3
+		hrs = 3
 	return hrs 
 
 
 
 
-def booking_category(qday,pday,hrs):
+def booking_category( qday, pday, hrs ):
 	#switch cases to find the purpose of rent 
 	options={'Monday':{'Monday':{1:'business',2:'family',3: 'other'},'Tuesday':{1:'business',2:'family',3: 'other'}
 						,'Wednesday':{1:'business',2:'family',3: 'other'},'Thursday':{1:'business',2:'family',3: 'other'}
@@ -97,14 +97,14 @@ def booking_category(qday,pday,hrs):
 			}
 	return options[qday][pday][hrs]
 
-def display_table(df,var):
+def display_table(df, var):
 	#rows to be displayed
-	if var == 'family':
-		df=df.iloc[:10] #top ten big cars
-	elif var == 'business':
-		df=df.iloc[int(len(df)/2)-5:int(len(df)/2)+5]#medium cars
+	if var is 'family':
+		df = df.iloc[:10] #top ten big cars
+	elif var is 'business':
+		df = df.iloc[int(len(df)/2)-5:int(len(df)/2)+5]#medium cars
 	else:
-		df=df.iloc[::int(len(df)/10)] #every alternate car, mixed cars
+		df = df.iloc[::int(len(df)/10)] #every alternate car, mixed cars
 	return df
 	
 
